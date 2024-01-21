@@ -91,16 +91,21 @@ Code with Intent
 """
 
 import random
-
+ART = [rock, paper, scissors]
 OPTIONS = ['rock', 'paper', 'scissors']
 WINNER_RULES = [['paper','rock'],['rock','scissors'],['scissors','paper']]
 
 player1_choice = input("chose from one of three options: rock, paper, scissors:\n").lower()
-player2_choice = OPTIONS[random.randint(0,2)]
+player1_index = OPTIONS.index(player1_choice)
+
+player2_index = random.randint(0,2)
+player2_choice = OPTIONS[player2_index]
 
 
 if OPTIONS.count(player1_choice) > 0:
-  print(player2_choice)
+  # print(player2_choice)
+  print(ART[player1_index])
+  print(ART[player2_index])
   if player1_choice == player2_choice:
     print("You Tied")
   elif (
