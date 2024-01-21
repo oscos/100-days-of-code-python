@@ -104,7 +104,9 @@ player2_choice = OPTIONS[player2_index]
 
 if OPTIONS.count(player1_choice) > 0:
   # print(player2_choice)
+  print(f"You chose: {player1_choice}")
   print(ART[player1_index])
+  print(f"Computer chose: {player2_choice}")
   print(ART[player2_index])
   if player1_choice == player2_choice:
     print("You Tied")
