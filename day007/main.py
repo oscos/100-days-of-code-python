@@ -67,18 +67,22 @@ HANGMANPICS = ['''
 =========''']
 
 # Word bank of animals
-# WORDS = ('ant baboon badger bat bear beaver camel cat clam cobra cougar '
-#          'coyote crow deer dog donkey duck eagle ferret fox frog goat '
-#          'goose hawk lion lizard llama mole monkey moose mouse mule newt '
-#          'otter owl panda parrot pigeon python rabbit ram rat raven '
-#          'rhino salmon seal shark sheep skunk sloth snake spider '
-#          'stork swan tiger toad trout turkey turtle weasel whale wolf '
-#          'wombat zebra ').upper().split()
+WORDS = ('ant baboon badger bat bear beaver camel cat clam cobra cougar '
+         'coyote crow deer dog donkey duck eagle ferret fox frog goat '
+         'goose hawk lion lizard llama mole monkey moose mouse mule newt '
+         'otter owl panda parrot pigeon python rabbit ram rat raven '
+         'rhino salmon seal shark sheep skunk sloth snake spider '
+         'stork swan tiger toad trout turkey turtle weasel whale wolf '
+         'wombat zebra ').upper().split()
 
-WORDS = ('doggie ').upper().split()
+# WORDS = ('doggie ').upper().split()
 # print(WORDS)
 
+ALPHABET = list(map(chr, range(ord('A'), ord('Z') + 1)))
+# print(ALPHABET)
+
 user_input_letter_list = []
+
 
 def get_hangman_pic(number_of_attempts):
 
@@ -112,7 +116,12 @@ def is_letter_found(letter, letter_set):
         return True
     return False
 
-# def find_letters_only_in_set(letter_set, letter_list):
+def is_letter_invalid(letter):
+    if letter in ALPHABET:
+        return False
+    return True
+
+# def find_letter_match_set(letter_set, letter_list):
 #     letters_only_in_set = letter_set.intersection(letter_list)
 #     return letters_only_in_set
 
@@ -134,14 +143,20 @@ encrypted_word = encrypt_word(random_word, user_input_letter_list)
 print(f"Encrypted Word: {encrypted_word}")
 
 
-number_of_wrong_attempts = 0
-number_of_right_attempts = 0
-max_number_of_wrong_attempts = len(HANGMANPICS)
+incorrect_attempt_count = 0
+correct_attempt_count = 0
+max_incorrect_attempt_count = len(HANGMANPICS)
 
-while number_of_wrong_attempts < max_number_of_wrong_attempts:
+while incorrect_attempt_count < max_incorrect_attempt_count:
 
     user_input_letter = input("Pick a letter from the alphabet (case insensitive): ").upper()
     print(user_input_letter)
+
+    if is_letter_invalid(user_input_letter):
+        print(f"You selected an invalid character: {user_input_letter}")
+        print("Please try again.")
+        print("")
+        continue
 
     if is_letter_previously_chosen(user_input_letter, user_input_letter_list):
         print(f"You previously selected this letter: {user_input_letter_list}")
@@ -152,18 +167,18 @@ while number_of_wrong_attempts < max_number_of_wrong_attempts:
     if is_letter_found(user_input_letter, random_letter_set):
         print(f"Correct guess! The letter {user_input_letter} is found within the random word.")
         print("")
-        number_of_right_attempts += 1
+        correct_attempt_count += 1
 
-        if number_of_right_attempts == len(random_letter_set):
+        if correct_attempt_count == len(random_letter_set):
             print(f"You win! The random word was {random_word}")
             break
     else:
-        print(f"Wrong guess! The letter {user_input_letter} is NOT found within the random word.")
-        print(get_hangman_pic(number_of_wrong_attempts))
+        print(f"Incorrect guess! The letter {user_input_letter} is NOT found within the random word.")
+        print(get_hangman_pic(incorrect_attempt_count))
         print("")
-        number_of_wrong_attempts += 1
+        incorrect_attempt_count += 1
 
-        if number_of_wrong_attempts == max_number_of_wrong_attempts:
+        if incorrect_attempt_count == max_incorrect_attempt_count:
             print(f"You lose! The random word was {random_word}")
             break
 
@@ -173,12 +188,5 @@ while number_of_wrong_attempts < max_number_of_wrong_attempts:
     encrypted_word = encrypt_word(random_word, user_input_letter_list)
     print(f"Encrypted Word: {encrypted_word}")
 
-    # print(f"length_of_user_input_letter_list): {len(user_input_letter_list)}")
-    # print(f"number_of_wrong_attempts: {number_of_wrong_attempts}")
-    # print(f"number_of_right_attempts: {number_of_right_attempts}")
-    # print(f"random_letter_set: {random_letter_set}")
-    number_of_remaining_attempts = calc_remaining_attempts(max_number_of_wrong_attempts, number_of_wrong_attempts)
-    print(f"Number of Remaining Attempts: {number_of_remaining_attempts}")
-
-# if number_of_wrong_attempts == max_number_of_wrong_attempts:
-#     print(f"You lose! The random word was {random_word}")
+    remaining_attempt_count = calc_remaining_attempts(max_incorrect_attempt_count, incorrect_attempt_count)
+    print(f"Number of Remaining Attempts: {remaining_attempt_count}")
